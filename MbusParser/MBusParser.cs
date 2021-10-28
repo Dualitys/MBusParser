@@ -41,21 +41,12 @@ namespace MBus
         /// <returns>the mbus telegram.</returns>
         public MBusTelegram ParsePayload(MBusHeader header, IList<byte> payload, byte[] decryptionKey = null)
         {
-            double? rssi = null;
-            // todo refactor to be able to return rssi
-
-            if (header.IsWireless)
-            {
-                rssi = -payload.Last() / 2;
-                payload = payload.Take(payload.Count - 1).ToArray();
-            }
-
             IList<VariableDataRecord>? records = this.ParseRecords(
                 header,
                 payload,
                 decryptionKey);
 
-            return new MBusTelegram(header, records, rssi);
+            return new MBusTelegram(header, records);
         }
 
         /// <summary>

@@ -12,6 +12,7 @@ using MBus.DataRecord.DataRecordHeader.DataInformationBlock;
 using MBus.DataRecord.DataRecordHeader.ValueInformationBlock;
 using MBus.DataRecord.DataRecordHeader.ValueInformationBlock.Extension;
 using MBus.Extensions;
+using MBus.Helpers;
 
 namespace MBus.DataRecord
 {
@@ -173,7 +174,69 @@ namespace MBus.DataRecord
 
         private DateTime ParseDateTime()
         {
-            return DateTime.MinValue;
+            DateTime result;
+            switch (DataInformationField.DataField)
+            {
+                case DataField.SixteenBitInteger:
+                    {
+                        var day = _data[0] & 0x1f;
+                        var month = (_data[1] & 0x0f);
+                        var year = 100 + (((_data[0] & 0xe0) >> 5) | ((_data[1] & 0xf0) >> 1));
+
+                        if (year < 70)
+                            year += 2000;
+                        else
+                            year += 1900;
+
+                        result = month == 0 || day == 0 ? DateTime.MinValue : new DateTime(year, month, day);
+                    }
+                    break;
+                case DataField.ThirtyTwoBitInteger:
+                    {
+                        var minute = _data[0] & 0x3f;
+                        var hour = _data[1] & 0x1f;
+                        var day = _data[2] & 0x1f;
+                        var month = (_data[3] & 0x0f);
+                        var year = 100 + (((_data[2] & 0xe0) >> 5) | ((_data[3] & 0xf0) >> 1));
+
+                        if (year < 70)
+                            year += 2000;
+                        else
+                            year += 1900;
+
+                        if (month == 0 || day == 0)
+                            result = DateTime.MinValue;
+                        else
+                            result = new DateTime(year, month, day, hour, minute, 0);
+                    }
+                    break;
+                case DataField.FourtyEightBitInteger:
+                    {
+                        var second = _data[0] & 0x3f;
+                        var minute = _data[1] & 0x3f;
+                        var hour = _data[2] & 0x1f;
+                        var day = _data[3] & 0x1f;
+                        var month = (_data[4] & 0x0f);
+                        var year = 100 + (((_data[3] & 0xe0) >> 5) | ((_data[4] & 0xf0) >> 1));  //(((temp >> 25) & 0x38) | ((temp >> 21) & 0x07));
+
+                        if (year < 70)
+                            year += 2000;
+                        else
+                            year += 1900;
+
+                        var valid = (_data[1] & 0x80) == 0;
+                        var summer = (_data[1] & 0x8000) == 0;
+
+                        if (month == 0 || day == 0)
+                            result = DateTime.MinValue;
+                        else
+                            result = new DateTime(year, month, day, hour, minute, second);
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException(nameof(DataInformationField.DataField));
+            }
+            return result;
         }
 
         private string ParseString(int multiplier)
@@ -199,6 +262,11 @@ namespace MBus.DataRecord
         private long ValueAsLong()
         {
             var length = _data.Length;
+            if (length == 0)
+            {
+                return 0;
+            }
+
             var correctEndian = _data;
             switch (length)
             {

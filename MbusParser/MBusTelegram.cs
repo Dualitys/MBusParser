@@ -20,11 +20,9 @@ namespace MBus
         /// </summary>
         /// <param name="header"><see cref="MBusHeader"/>.</param>
         /// <param name="records">A list of <see cref="MbusRecord"/>'s.</param>
-        /// <param name="rssi">RSSI-value if the telegram was from a wireless mbus.</param>
-        public MBusTelegram(MBusHeader header, IList<VariableDataRecord>? records, double? rssi)
+        public MBusTelegram(MBusHeader header, IList<VariableDataRecord>? records)
         {
             Header = header;
-            Rssi = rssi;
             Records = records;
         }
 
@@ -37,10 +35,5 @@ namespace MBus
         /// Gets the records.
         /// </summary>
         public IList<VariableDataRecord>? Records { get; internal set; }
-
-        /// <summary>
-        /// Gets the RSSI-value if the telegram was from a wireless mbus.
-        /// </summary>
-        public double? Rssi { get; internal set; } = null;
     }
 }

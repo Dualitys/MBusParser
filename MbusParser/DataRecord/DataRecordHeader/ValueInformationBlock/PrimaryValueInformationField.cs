@@ -45,17 +45,21 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock
             {
                 return baseMultiplier;
             }
-            else if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastThreeBitsMask)))
+            else if (SetType(FieldByte.Mask(ValueInformationMask)))
             {
-                return FieldByte.Mask(ValueInformationMask).Mask(LastThreeBitsMask);
+                return baseMultiplier;
+            }
+            else if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastBitMask)))
+            {
+                return FieldByte.Mask(ValueInformationMask).Mask(LastBitMask);
             }
             else if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastTwoBitsMask)))
             {
                 return FieldByte.Mask(ValueInformationMask).Mask(LastTwoBitsMask);
             }
-            else if (SetType(FieldByte.Mask(ValueInformationMask)))
+            else if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastThreeBitsMask)))
             {
-                return baseMultiplier;
+                return FieldByte.Mask(ValueInformationMask).Mask(LastThreeBitsMask);
             }
             else
             {
@@ -117,7 +121,6 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock
                     Unit = Unit.Kgh;
                     break;
                 case PrimaryValueInformation.OnTime:
-                    Type = PrimaryValueInformation.OnTime;
                     ParseTime(baseMultiplier);
                     break;
                 case PrimaryValueInformation.InletFlowTemperature:
