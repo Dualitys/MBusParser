@@ -67,7 +67,7 @@ namespace MBus.DataRecord
 
         private int FindMultiplier()
         {
-            if (ValueInformationFieldExtensions.Any())
+            if (ValueInformationFieldExtensions.Any(e => e.Multiplier != 0))
             {
                 return ValueInformationFieldExtensions.First().Multiplier;
             }

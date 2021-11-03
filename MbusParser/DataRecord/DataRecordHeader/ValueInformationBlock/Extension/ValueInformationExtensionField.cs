@@ -81,9 +81,6 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock.Extension
                 case PrimaryValueInformationExtension.AdditiveCorrectionConstant:
                     Multiplier = baseMultiplier - 10;
                     break;
-                default:
-                    Multiplier = baseMultiplier;
-                    break;
             }
         }
     }
