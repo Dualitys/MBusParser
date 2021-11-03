@@ -23,7 +23,7 @@ namespace MBus.DataRecord
         public VariableDataRecord(DataBlock dataBlock, double? rssi = null)
         {
             DataBlock = dataBlock ?? throw new ArgumentNullException(nameof(dataBlock));
-            Rssi = rssi;
+            //Rssi = rssi;
         }
 
         /// <summary>
@@ -51,9 +51,9 @@ namespace MBus.DataRecord
         /// </summary>
         public DataBlock DataBlock { get; }
 
-        /// <summary>
-        /// Gets a Relative Signal Strength Indicator. Present if the parsed packet was from a wireless mbus.
-        /// </summary>
-        public double? Rssi { get; internal set; }
+        ///// <summary>
+        ///// Gets a Relative Signal Strength Indicator. Present if the parsed packet was from a wireless mbus.
+        ///// </summary>
+        //public double? Rssi { get; internal set; }
     }
 }

@@ -428,5 +428,56 @@ namespace MBus.DataRecord
 
             return ValueDescription.None;
         }
+
+        private bool Equals(DataBlock other)
+        {
+            return Unit == other.Unit &&
+                   Equals(Value, other.Value) &&
+                   ValueDescription == other.ValueDescription &&
+                   Equals(DataInformationField, other.DataInformationField) &&
+                   DataInformationFieldExtensions.SequenceEqual(other.DataInformationFieldExtensions) &&
+                   Equals(ValueInformationField, other.ValueInformationField) &&
+                   ValueInformationFieldExtensions.SequenceEqual(other.ValueInformationFieldExtensions);
+        }
+
+        public override string ToString()
+        {
+            var dataInformationExtensions = string.Empty;
+            if (DataInformationFieldExtensions.Any())
+            {
+                dataInformationExtensions =
+                    $"DataInformationExtensions: {string.Join(",", DataInformationFieldExtensions)}";
+            }
+
+            var valueInformationExtensions = string.Empty;
+            if (ValueInformationFieldExtensions.Any())
+            {
+                valueInformationExtensions =
+                    $"ValueInformationExtensions: {string.Join(",", ValueInformationFieldExtensions)}";
+            }
+
+            return
+                $"DataInformation: [{DataInformationField}], DataInformationExtensions: [{dataInformationExtensions}], ValueInformation: [{ValueInformationField}], ValueInformationExtensions: [{valueInformationExtensions}] Value: [{Value}]";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is DataBlock other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (int)Unit;
+                hashCode = (hashCode * 397) ^ (Value != null ? Value.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (int)ValueDescription;
+                hashCode = (hashCode * 397) ^ (DataInformationField != null ? DataInformationField.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (DataInformationFieldExtensions != null ? DataInformationFieldExtensions.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (ValueInformationField != null ? ValueInformationField.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (ValueInformationFieldExtensions != null ? ValueInformationFieldExtensions.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
     }
 }

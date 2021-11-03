@@ -90,5 +90,33 @@ namespace MBus.DataRecord.DataRecordHeader.DataInformationBlock
                     return null;
             }
         }
+
+        public override string ToString()
+        {
+            return $"DataField: {DataField}, FunctionField: {FunctionField}, StorageNumber: {StorageNumber}";
+        }
+
+        private bool Equals(DataInformationField other)
+        {
+            return DataField == other.DataField && FunctionField == other.FunctionField &&
+                   StorageNumber == other.StorageNumber;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is DataInformationField other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = base.GetHashCode();
+                hashCode = (hashCode * 397) ^ (int)DataField;
+                hashCode = (hashCode * 397) ^ (int)FunctionField;
+                hashCode = (hashCode * 397) ^ StorageNumber;
+                return hashCode;
+            }
+        }
     }
 }

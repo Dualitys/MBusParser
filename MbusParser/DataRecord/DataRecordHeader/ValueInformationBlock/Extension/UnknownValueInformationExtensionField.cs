@@ -10,5 +10,10 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock.Extension
             : base(fieldByte)
         {
         }
+
+        public override string ToString()
+        {
+            return $"{base.ToString()}, Type: Unknown";
+        }
     }
 }

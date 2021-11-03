@@ -30,7 +30,7 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock.Extension
             Parse();
         }
 
-        internal PrimaryValueInformationExtension Type { get; private set; }
+        public PrimaryValueInformationExtension Type { get; private set; }
 
         private bool SetType(byte vif)
         {
@@ -81,6 +81,32 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock.Extension
                 case PrimaryValueInformationExtension.AdditiveCorrectionConstant:
                     Multiplier = baseMultiplier - 10;
                     break;
+            }
+        }
+
+        public override string ToString()
+        {
+            return $"{base.ToString()}, Type: {Type}";
+        }
+
+        protected bool Equals(PrimaryValueInformationExtensionField other)
+        {
+            return base.Equals(other) && Type == other.Type;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((PrimaryValueInformationExtensionField)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (base.GetHashCode() * 397) ^ (int)Type;
             }
         }
     }

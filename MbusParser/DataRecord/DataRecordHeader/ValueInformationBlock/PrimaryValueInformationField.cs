@@ -28,7 +28,7 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock
             Parse();
         }
 
-        internal PrimaryValueInformation Type { get; private set; }
+        public PrimaryValueInformation Type { get; private set; }
 
         internal PrimaryValueInformationType GenericType { get; set; }
 
@@ -201,6 +201,31 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock
                     break;
             }
 
+        }
+
+        public override string ToString()
+        {
+            return $"{base.ToString()}, Type: {Type}";
+        }
+
+        private bool Equals(PrimaryValueInformationField other)
+        {
+            return base.Equals(other) && Type == other.Type;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is PrimaryValueInformationField other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = base.GetHashCode();
+                hashCode = (hashCode * 397) ^ (int)Type;
+                return hashCode;
+            }
         }
     }
 }

@@ -20,10 +20,10 @@ namespace MBus
         /// </summary>
         /// <param name="header"><see cref="MBusHeader"/>.</param>
         /// <param name="records">A list of <see cref="MbusRecord"/>'s.</param>
-        public MBusTelegram(MBusHeader header, IList<VariableDataRecord>? records)
+        public MBusTelegram(MBusHeader header, IList<VariableDataRecord> records)
         {
             Header = header;
-            Records = records;
+            Records = records ?? new List<VariableDataRecord>();
         }
 
         /// <summary>
@@ -34,6 +34,6 @@ namespace MBus
         /// <summary>
         /// Gets the records.
         /// </summary>
-        public IList<VariableDataRecord>? Records { get; internal set; }
+        public IList<VariableDataRecord> Records { get; internal set; }
     }
 }

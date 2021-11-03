@@ -57,5 +57,20 @@ namespace MBus.DataRecord.DataRecordHeader.DataInformationBlock
         /// condition.
         /// </summary>
         public Tariff Tariff => new Tariff(FieldByte.Mask(TariffMask).ShiftRight(4));
+
+        public override string ToString()
+        {
+            return $"StorageNumber: {StorageNumber}, SubUnit: {SubUnit}, Tariff: {Tariff}";
+        }
+
+        private bool Equals(DataInformationExtensionField other)
+        {
+            return StorageNumber == other.StorageNumber && SubUnit == other.SubUnit && Tariff.Equals(other.Tariff);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is DataInformationExtensionField other && Equals(other);
+        }
     }
 }

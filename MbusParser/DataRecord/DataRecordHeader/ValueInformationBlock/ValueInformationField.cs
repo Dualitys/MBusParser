@@ -10,6 +10,27 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock
     /// </summary>
     public abstract class ValueInformationField : InformationField
     {
+        protected bool Equals(ValueInformationField other)
+        {
+            return Multiplier == other.Multiplier && Unit == other.Unit;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ValueInformationField)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (Multiplier * 397) ^ (int)Unit;
+            }
+        }
+
         /// <summary>
         /// A mask for the last four bits of a byte.
         /// </summary>
@@ -35,9 +56,9 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock
         /// </summary>
         protected internal const byte ValueInformationMask = 0b0111_1111;
 
-        internal int Multiplier { get; set; } = 0;
+        public int Multiplier { get; set; } = 0;
 
-        internal Unit Unit { get; set; } = Unit.None;
+        public Unit Unit { get; set; } = Unit.None;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValueInformationField"/> class.
@@ -46,6 +67,11 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock
         protected ValueInformationField(byte fieldByte)
             : base(fieldByte)
         {
+        }
+
+        public override string ToString()
+        {
+            return $"Unit: {Unit}, Multiplier: {Multiplier}";
         }
     }
 }

@@ -83,5 +83,28 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock.Extension
                     break;
             }
         }
+
+        public override string ToString()
+        {
+            return $"{base.ToString()}, Type: {Type}";
+        }
+
+        private bool Equals(FDValueInformationExtensionField other)
+        {
+            return base.Equals(other) && Type == other.Type;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is FDValueInformationExtensionField other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (base.GetHashCode() * 397) ^ (int)Type;
+            }
+        }
     }
 }
