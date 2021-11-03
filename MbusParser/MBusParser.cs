@@ -79,7 +79,7 @@ namespace MBus
             List<byte> payloadBody;
 
             // Todo find out whats wrong with this.
-            if(header.ExtendedLinkLayer != null)
+            if (header.ExtendedLinkLayer != null)
             {
                 payloadBody = payload.Skip(header.PayloadStartsAtIndex - 2).ToList();
             }
@@ -87,7 +87,7 @@ namespace MBus
             {
                 payloadBody = payload.Skip(header.PayloadStartsAtIndex).ToList();
             }
-            
+
 
             if (decryptionKey != null)
             {
@@ -110,9 +110,15 @@ namespace MBus
                 payloadBody = payloadBody.Skip(1).ToList();
             }
 
-            while(payloadBody.Last() == 0x2F)
+            while (payloadBody.Last() == 0x2F)
             {
                 payloadBody.RemoveAt(payloadBody.Count() - 1);
+            }
+
+            if (!header.IsWireless && payloadBody.LastOrDefault() == 0x16)
+            {
+                payloadBody.RemoveAt(payloadBody.Count() - 1);//EOF
+                payloadBody.RemoveAt(payloadBody.Count() - 1);//CRC
             }
 
             var list = new List<VariableDataRecord>();
@@ -151,27 +157,48 @@ namespace MBus
                     ValueInformationExtensionField? extension = null;
                     if (!valueInformationFieldExtensions.Any())
                     {
-                        switch (valueInformationField.Type)
+                        switch (valueInformationField.GenericType)
                         {
-                            case PrimaryValueInformation.FBValueInformationExtension:
-                                extension = new FBValueInformationExtensionField(payloadBody[indexer++]);
+                            case PrimaryValueInformationType.ManufacturerSpecific:
+                            case PrimaryValueInformationType.PrimaryVIF:
+                            case PrimaryValueInformationType.PlainTextVIF:
+                            case PrimaryValueInformationType.AnyVIF:
+                                extension = new PrimaryValueInformationExtensionField(payloadBody[indexer++]);
                                 break;
-                            case PrimaryValueInformation.FDValueInformationExtension:
+                            case PrimaryValueInformationType.LinearVIFExtensionFD:
                                 extension = new FDValueInformationExtensionField(payloadBody[indexer++]);
                                 break;
-                            case PrimaryValueInformation.ManufacturerSpecific:
-                                switch (header.ManufacturerName.ToLowerInvariant())
-                                {
-                                    case "kam":
-                                        extension = new KamstrupValueInformationExtensionField(payloadBody[indexer++]);
-                                        break;
-                                }
-
+                            case PrimaryValueInformationType.LinearVIFExtensionFB:
+                                extension = new FBValueInformationExtensionField(payloadBody[indexer++]);
                                 break;
                             default:
                                 extension = new UnknownValueInformationExtensionField(payloadBody[indexer++]);
                                 break;
                         }
+                        //switch (valueInformationField.Type)
+                        //{
+                        //    case PrimaryValueInformation.FBValueInformationExtension:
+                        //        extension = new FBValueInformationExtensionField(payloadBody[indexer++]);
+                        //        break;
+                        //    case PrimaryValueInformation.FDValueInformationExtension:
+                        //        extension = new FDValueInformationExtensionField(payloadBody[indexer++]);
+                        //        break;
+                        //    case PrimaryValueInformation.ManufacturerSpecific:
+                        //        switch (header.ManufacturerName.ToLowerInvariant())
+                        //        {
+                        //            case "kam":
+                        //                extension = new KamstrupValueInformationExtensionField(payloadBody[indexer++]);
+                        //                break;
+                        //        }
+
+                        //        break;
+                        //    case PrimaryValueInformation.Volume:
+                        //        extension = new PrimaryValueInformationExtensionField(payloadBody[indexer++]);
+                        //        break;
+                        //    default:
+                        //        extension = new UnknownValueInformationExtensionField(payloadBody[indexer++]);
+                        //        break;
+                        //}
                     }
                     else
                     {

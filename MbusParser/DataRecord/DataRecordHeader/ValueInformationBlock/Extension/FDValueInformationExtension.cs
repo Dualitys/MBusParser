@@ -73,6 +73,74 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock.Extension
         SpecialSupplierInformation = 0x67, //	E110 0111 Special supplier information
         DurationSinceLastCumulation = 0x6B, //	E110 10pp Duration since last cumulation [hour = s..years = s]
         BatteryOperatingTime = 0x6F, //	E110 11pp Operating time battery [hour = s..years = s]
-        BatteryChangeTimeAndDate = 0x70 //	E111 0000 Date and time of battery change
+        BatteryChangeTimeAndDate = 0x70, //	E111 0000 Date and time of battery change
+        Reserved7F = 0x7f
+    }
+
+    public enum PrimaryValueInformationExtension
+    {
+        ErrorCodesVIFE = 0x1F,
+        PerSecond = 0x20,
+        PerMinute = 0x21,
+        PerHour = 0x22,
+        PerDay = 0x23,
+        PerWeek = 0x24,
+        PerMonth = 0x25,
+        PerYear = 0x26,
+        PerRevolutionMeasurement = 0x27,
+        IncrementPerInputPulseOnInputChannel0 = 0x28,
+        IncrementPerInputPulseOnInputChannel1 = 0x29,
+        IncrementPerOutputPulseOnOutputChannel0 = 0x2A,
+        IncrementPerOutputPulseOnOutputChannel1 = 0x2B,
+        PerLiter = 0x2C,
+        PerM3 = 0x2D,
+        PerKg = 0x2E,
+        PerKelvin = 0x2F,
+        PerkWh = 0x30,
+        PerGJ = 0x31,
+        PerkW = 0x32,
+        PerKelvinLiter = 0x33,
+        PerVolt = 0x34,
+        PerAmpere = 0x35,
+        MultipliedBySek = 0x36,
+        MultipliedBySekPerV = 0x37,
+        MultipliedBySekPerA = 0x38,
+        StartDateTimeOf = 0x39,
+        UncorrectedUnit = 0x3A,
+        AccumulatedPositive = 0x3B,
+        AccumulatedNegative = 0x3C,
+        ReservedVIFE3F = 0x3F,
+        LowerLimit = 0x40,
+        LowerLimitExceedsCount = 0x41,
+        DateTimeOfBeginOfFirstLowerLimitExceed = 0x42,
+        DateTimeOfEndOfFirstLowerLimitExceed = 0x43,
+        ReservedVIFE45 = 0x45,
+        DateTimeOfBeginOfLastLowerLimitExceed = 0x46,
+        DateTimeOfEndOfLastLowerLimitExceed = 0x47,
+        UpperLimit = 0x48,
+        UpperLimitExceedsCount = 0x49,
+        DateTimeOfBeginOfFirstUpperLimitExceed = 0x4A,
+        DateTimeOfEndOfFirstUpperLimitExceed = 0x4B,
+        ReservedVIFE4D = 0x4D,
+        DateTimeOfBeginOfLastUpperLimitExceed = 0x4E,
+        DateTimeOfEndOfLastUpperLimitExceed = 0x4F,
+        DurationOfFirstLowerLimitExceed = 0x53,//50-53
+        DurationOfLastLowerLimitExceed = 0x57, //54-57
+        DurationOfFirstUpperLimitExceed = 0x5B, //58-5B
+        DurationOfLastUpperLimitExceed = 0x5F, //5C-5F
+        DurationOfFirst = 0x63,//50-63
+        DurationOfLast = 0x67,//64-67
+        ReservedVIFE69 = 0x69,
+        DateTimeOfBeginOfFirst = 0x6A,
+        DateTimeOfEndOfFirst = 0x6B,
+        ReservedVIFE6D = 0x6D,
+        DateTimeOfBeginOfLast = 0x6E,
+        DateTimeOfEndOfLast = 0x6F,
+        MultiplicativeCorrectionFactor = 0x77,
+        AdditiveCorrectionConstant = 0x7B,
+        ReservedVIFE7C = 0x7C,
+        MultiplicativeCorrectionFactor1000 = 0x7D,
+        FutureValue = 0x7E,
+        NextVIFEAndDataManufacturerSpecific = 0x7F
     }
 }

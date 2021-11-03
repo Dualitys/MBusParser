@@ -36,25 +36,25 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock.Extension
         {
             byte baseMultiplier = 0;
 
-            if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastFourBitsMask)))
+            if (SetType(FieldByte.Mask(ValueInformationMask)))
             {
-                return FieldByte.Mask(ValueInformationMask).Mask(LastFourBitsMask);
+                return baseMultiplier;
             }
-            else if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastThreeBitsMask)))
-            {
-                return FieldByte.Mask(ValueInformationMask).Mask(LastThreeBitsMask);
-            }
-            else if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastTwoBitsMask)))
-            {
-                return FieldByte.Mask(ValueInformationMask).Mask(LastTwoBitsMask);
-            }
-            else if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastBitMask)))
+            if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastBitMask)))
             {
                 return FieldByte.Mask(ValueInformationMask).Mask(LastBitMask);
             }
-            else if (SetType(FieldByte.Mask(ValueInformationMask)))
+            if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastTwoBitsMask)))
             {
-                return baseMultiplier;
+                return FieldByte.Mask(ValueInformationMask).Mask(LastTwoBitsMask);
+            }
+            if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastThreeBitsMask)))
+            {
+                return FieldByte.Mask(ValueInformationMask).Mask(LastThreeBitsMask);
+            }
+            if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastFourBitsMask)))
+            {
+                return FieldByte.Mask(ValueInformationMask).Mask(LastFourBitsMask);
             }
             else
             {

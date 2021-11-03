@@ -30,10 +30,27 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock
 
         internal PrimaryValueInformation Type { get; private set; }
 
+        internal PrimaryValueInformationType GenericType { get; set; }
+
         private bool SetType(byte vif)
         {
             Type = (PrimaryValueInformation)vif;
             var success = Enum.IsDefined(typeof(PrimaryValueInformation), Type);
+            switch (Type)
+            {
+                case PrimaryValueInformation.ManufacturerSpecific:
+                    GenericType = PrimaryValueInformationType.ManufacturerSpecific;
+                    break;
+                case PrimaryValueInformation.FDValueInformationExtension:
+                    GenericType = PrimaryValueInformationType.LinearVIFExtensionFD;
+                    break;
+                case PrimaryValueInformation.FBValueInformationExtension:
+                    GenericType = PrimaryValueInformationType.LinearVIFExtensionFB;
+                    break;
+                default:
+                    GenericType = PrimaryValueInformationType.PrimaryVIF;
+                    break;
+            }
             return success;
         }
 
@@ -45,27 +62,29 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock
             {
                 return baseMultiplier;
             }
-            else if (SetType(FieldByte.Mask(ValueInformationMask)))
-            {
-                return baseMultiplier;
-            }
-            else if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastBitMask)))
+
+            if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastBitMask)))
             {
                 return FieldByte.Mask(ValueInformationMask).Mask(LastBitMask);
             }
-            else if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastTwoBitsMask)))
+
+            if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastTwoBitsMask)))
             {
                 return FieldByte.Mask(ValueInformationMask).Mask(LastTwoBitsMask);
             }
-            else if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastThreeBitsMask)))
+
+            if (SetType(FieldByte.Mask(ValueInformationMask).Or(LastThreeBitsMask)))
             {
                 return FieldByte.Mask(ValueInformationMask).Mask(LastThreeBitsMask);
             }
-            else
+
+            if (SetType(FieldByte.Mask(ValueInformationMask)))
             {
-                // TODO HANDLE ERROR
                 return baseMultiplier;
             }
+
+            // TODO HANDLE ERROR
+            return baseMultiplier;
         }
 
         private void Parse()

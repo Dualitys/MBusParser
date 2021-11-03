@@ -285,7 +285,65 @@ namespace MBus.DataRecord
         {
             var vife = ValueInformationFieldExtensions.LastOrDefault(x => x.Unit != Unit.None);
 
+            if (vife == null)
+            {
+                var vifType = ValueInformationField.Type;
 
+                switch (vifType)
+                {
+                    case PrimaryValueInformation.EnergyWh:
+                    case PrimaryValueInformation.EnergyJoule:
+                        return ValueDescription.Energy;
+                    case PrimaryValueInformation.Volume:
+                        return ValueDescription.Volume;
+                    case PrimaryValueInformation.Mass:
+                        return ValueDescription.Mass;
+                    case PrimaryValueInformation.OnTime:
+                    case PrimaryValueInformation.OperatingTime:
+                    case PrimaryValueInformation.Date:
+                    case PrimaryValueInformation.DateTimeGeneral:
+                        return ValueDescription.Time;
+                    case PrimaryValueInformation.PowerW:
+                    case PrimaryValueInformation.PowerJh:
+                        return ValueDescription.Power;
+                    case PrimaryValueInformation.VolumeFlow:
+                    case PrimaryValueInformation.VolumeFlowExt:
+                    case PrimaryValueInformation.VolumeFlowExtS:
+                        return ValueDescription.VolumeFlow;
+                    case PrimaryValueInformation.MassFlow:
+                        return ValueDescription.MassFlow;
+                    case PrimaryValueInformation.InletFlowTemperature:
+                        return ValueDescription.InletFlowTemperature;
+                    case PrimaryValueInformation.ReturnFlowTemperature:
+                        return ValueDescription.ReturnFlowTemperature;
+                    case PrimaryValueInformation.TemperatureDifference:
+                        return ValueDescription.TemperatureDifference;
+                    case PrimaryValueInformation.ExternalTemperature:
+                        return ValueDescription.ExternalTemperature;
+                    case PrimaryValueInformation.Pressure:
+                        return ValueDescription.Pressure;
+                    case PrimaryValueInformation.AveragingDuration:
+                        return ValueDescription.AveragingDuration;
+                    case PrimaryValueInformation.ActualityDuration:
+                        return ValueDescription.ActualityDuration;
+
+                    case PrimaryValueInformation.UnitsForHCA:
+                    case PrimaryValueInformation.ReservedForFutureThirdTableOfValueInformationExtensions:
+                    case PrimaryValueInformation.FabricationNumber:
+                    case PrimaryValueInformation.Identification:
+                    case PrimaryValueInformation.Address:
+                    case PrimaryValueInformation.FBValueInformationExtension:
+                    case PrimaryValueInformation.ValueInformationInFollowingString:
+                    case PrimaryValueInformation.FDValueInformationExtension:
+                    case PrimaryValueInformation.ReservedForThirdExtensionOfValueInformationCodes:
+                    case PrimaryValueInformation.AnyValueInformation:
+                    case PrimaryValueInformation.ManufacturerSpecific:
+                    default:
+                        break;
+                }
+
+                
+            }
             if (vife != null && vife is FBValueInformationExtensionField fbVife)
             {
                 return GetFbDescription(fbVife.Type);
@@ -296,67 +354,21 @@ namespace MBus.DataRecord
                 return GetFdDescription(fdVife.Type);
             }
 
-            if (vife != null && vife is KamstrupValueInformationExtensionField kamstrupVife)
+            if (vife != null && vife is PrimaryValueInformationExtensionField primary)
             {
-                //return GetKamstrupDescription(kamstrupVife.Type);
-            }
-
-            var vifType = ValueInformationField.Type;
-
-            switch (vifType)
-            {
-                case PrimaryValueInformation.EnergyWh:
-                case PrimaryValueInformation.EnergyJoule:
-                    return ValueDescription.Energy;
-                case PrimaryValueInformation.Volume:
-                    return ValueDescription.Volume;
-                case PrimaryValueInformation.Mass:
-                    return ValueDescription.Mass;
-                case PrimaryValueInformation.OnTime:
-                case PrimaryValueInformation.OperatingTime:
-                case PrimaryValueInformation.Date:
-                case PrimaryValueInformation.DateTimeGeneral:
-                    return ValueDescription.Time;
-                case PrimaryValueInformation.PowerW:
-                case PrimaryValueInformation.PowerJh:
-                    return ValueDescription.Power;
-                case PrimaryValueInformation.VolumeFlow:
-                case PrimaryValueInformation.VolumeFlowExt:
-                case PrimaryValueInformation.VolumeFlowExtS:
-                    return ValueDescription.VolumeFlow;
-                case PrimaryValueInformation.MassFlow:
-                    return ValueDescription.MassFlow;
-                case PrimaryValueInformation.InletFlowTemperature:
-                    return ValueDescription.InletFlowTemperature;
-                case PrimaryValueInformation.ReturnFlowTemperature:
-                    return ValueDescription.ReturnFlowTemperature;
-                case PrimaryValueInformation.TemperatureDifference:
-                    return ValueDescription.TemperatureDifference;
-                case PrimaryValueInformation.ExternalTemperature:
-                    return ValueDescription.ExternalTemperature;
-                case PrimaryValueInformation.Pressure:
-                    return ValueDescription.Pressure;
-                case PrimaryValueInformation.AveragingDuration:
-                    return ValueDescription.AveragingDuration;
-                case PrimaryValueInformation.ActualityDuration:
-                    return ValueDescription.ActualityDuration;
-
-                case PrimaryValueInformation.UnitsForHCA:
-                case PrimaryValueInformation.ReservedForFutureThirdTableOfValueInformationExtensions:
-                case PrimaryValueInformation.FabricationNumber:
-                case PrimaryValueInformation.Identification:
-                case PrimaryValueInformation.Address:
-                case PrimaryValueInformation.FBValueInformationExtension:
-                case PrimaryValueInformation.ValueInformationInFollowingString:
-                case PrimaryValueInformation.FDValueInformationExtension:
-                case PrimaryValueInformation.ReservedForThirdExtensionOfValueInformationCodes:
-                case PrimaryValueInformation.AnyValueInformation:
-                case PrimaryValueInformation.ManufacturerSpecific:
-                default:
-                    break;
+                return GetPrimaryDescription(primary.Type);
             }
 
             return ValueDescription.None;
+        }
+
+        private ValueDescription GetPrimaryDescription(PrimaryValueInformationExtension primaryType)
+        {
+            switch (primaryType)
+            {
+                default:
+                    return ValueDescription.None;
+            }
         }
 
         private ValueDescription GetFbDescription(FBValueInformationExtension vife)
@@ -409,7 +421,6 @@ namespace MBus.DataRecord
             switch (vife)
             {
                 case FDValueInformationExtension.Volts:
-
                     return ValueDescription.ElectricalPotential;
                 case FDValueInformationExtension.Ampere:
                     return ValueDescription.ElectricalCurrent;

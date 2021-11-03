@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>library</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <NullableContextOptions>enable</NullableContextOptions>
     <LangVersion>preview</LangVersion>
   </PropertyGroup>

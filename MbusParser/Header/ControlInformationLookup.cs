@@ -40,7 +40,12 @@ namespace MBus.Header
         /// <returns>A tuple of <see cref="FrameType"/> and <see cref="HeaderType"/></returns>
         public static (FrameType frameType, HeaderType headerType) Find(byte field)
         {
-            return _lookup.GetValueOrDefault(field);
+            if (_lookup.TryGetValue(field, out var result))
+            {
+                return result;
+            }
+
+            return default;
         }
 
         public static int HeaderLength(byte field)

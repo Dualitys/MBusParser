@@ -44,4 +44,18 @@
 
 #pragma warning restore SA1602 // Enumeration items should be documented
     }
+
+    public enum PrimaryValueInformationType
+    {
+        PrimaryVIF, // E000 0000b .. E111 1011b
+        // The unit and multiplier is taken from the table for primary VIF (chapter 8.4.3).
+        PlainTextVIF, // E111 1100b
+        /// In case of VIF = 7Ch / FCh the true VIF is represented by the following ASCII string with the length given in the first byte. Please note that the byte order of the characters after the length byte depends on the used byte sequence.This plain text VIF allows the user to code units that are not included in the VIF tables.
+        LinearVIFExtensionFD, // FDh and FBh
+        LinearVIFExtensionFB, // FDh and FBh
+        // In case of VIF = FDh and VIF = FBh the true VIF is given by the next byte and the coding is taken from the table for secondary VIF (chapter 8.4.4). This extends the available VIF�s by another 256 codes.
+        AnyVIF, // 7Eh / FEh
+        // This VIF-Code can be used in direction master to slave for readout selection of all VIF�s.See chapter 6.4.3.
+        ManufacturerSpecific, // 7Fh / FFh
+    }
 }
