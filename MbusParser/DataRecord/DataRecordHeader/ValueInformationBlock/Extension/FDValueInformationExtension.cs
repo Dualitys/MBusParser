@@ -74,6 +74,7 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock.Extension
         DurationSinceLastCumulation = 0x6B, //	E110 10pp Duration since last cumulation [hour = s..years = s]
         BatteryOperatingTime = 0x6F, //	E110 11pp Operating time battery [hour = s..years = s]
         BatteryChangeTimeAndDate = 0x70, //	E111 0000 Date and time of battery change
+        RemainingBatteryDays = 0x74,//E111 0100 Remaining battery life time (days)
         Reserved7F = 0x7f
     }
 
@@ -136,6 +137,7 @@ namespace MBus.DataRecord.DataRecordHeader.ValueInformationBlock.Extension
         ReservedVIFE6D = 0x6D,
         DateTimeOfBeginOfLast = 0x6E,
         DateTimeOfEndOfLast = 0x6F,
+        RemainingBatteryLife = 0x74,
         MultiplicativeCorrectionFactor = 0x77,
         AdditiveCorrectionConstant = 0x7B,
         ReservedVIFE7C = 0x7C,

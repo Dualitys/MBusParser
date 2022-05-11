@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using MBus.DataRecord.DataRecordHeader;
 using MBus.DataRecord.DataRecordHeader.DataInformationBlock;
 using MBus.DataRecord.DataRecordHeader.ValueInformationBlock;
@@ -27,7 +28,7 @@ namespace MBus.DataRecord
 
         public ValueDescription ValueDescription { get; private set; }
 
-        private readonly byte[] _data;
+        public byte[] Data { get; private set; }
 
         internal DataInformationField DataInformationField { get; }
 
@@ -48,7 +49,7 @@ namespace MBus.DataRecord
 
         public DataBlock(byte[] data, DataInformationField dataInformationField, List<DataInformationExtensionField> dataInformationFieldExtensions, PrimaryValueInformationField valueInformationField, List<ValueInformationExtensionField> valueInformationFieldExtensions)
         {
-            _data = data ?? throw new ArgumentNullException(nameof(data));
+            Data = data ?? throw new ArgumentNullException(nameof(data));
             DataInformationField = dataInformationField ?? throw new ArgumentNullException(nameof(dataInformationField));
             DataInformationFieldExtensions = dataInformationFieldExtensions ?? throw new ArgumentNullException(nameof(dataInformationFieldExtensions));
             ValueInformationField = valueInformationField ?? throw new ArgumentNullException(nameof(valueInformationField));
@@ -179,9 +180,9 @@ namespace MBus.DataRecord
             {
                 case DataField.SixteenBitInteger:
                     {
-                        var day = _data[0] & 0x1f;
-                        var month = (_data[1] & 0x0f);
-                        var year = 100 + (((_data[0] & 0xe0) >> 5) | ((_data[1] & 0xf0) >> 1));
+                        var day = Data[0] & 0x1f;
+                        var month = (Data[1] & 0x0f);
+                        var year = 100 + (((Data[0] & 0xe0) >> 5) | ((Data[1] & 0xf0) >> 1));
 
                         if (year < 70)
                             year += 2000;
@@ -193,11 +194,11 @@ namespace MBus.DataRecord
                     break;
                 case DataField.ThirtyTwoBitInteger:
                     {
-                        var minute = _data[0] & 0x3f;
-                        var hour = _data[1] & 0x1f;
-                        var day = _data[2] & 0x1f;
-                        var month = (_data[3] & 0x0f);
-                        var year = 100 + (((_data[2] & 0xe0) >> 5) | ((_data[3] & 0xf0) >> 1));
+                        var minute = Data[0] & 0x3f;
+                        var hour = Data[1] & 0x1f;
+                        var day = Data[2] & 0x1f;
+                        var month = (Data[3] & 0x0f);
+                        var year = 100 + (((Data[2] & 0xe0) >> 5) | ((Data[3] & 0xf0) >> 1));
 
                         if (year < 70)
                             year += 2000;
@@ -212,20 +213,20 @@ namespace MBus.DataRecord
                     break;
                 case DataField.FourtyEightBitInteger:
                     {
-                        var second = _data[0] & 0x3f;
-                        var minute = _data[1] & 0x3f;
-                        var hour = _data[2] & 0x1f;
-                        var day = _data[3] & 0x1f;
-                        var month = (_data[4] & 0x0f);
-                        var year = 100 + (((_data[3] & 0xe0) >> 5) | ((_data[4] & 0xf0) >> 1));  //(((temp >> 25) & 0x38) | ((temp >> 21) & 0x07));
+                        var second = Data[0] & 0x3f;
+                        var minute = Data[1] & 0x3f;
+                        var hour = Data[2] & 0x1f;
+                        var day = Data[3] & 0x1f;
+                        var month = (Data[4] & 0x0f);
+                        var year = 100 + (((Data[3] & 0xe0) >> 5) | ((Data[4] & 0xf0) >> 1));  //(((temp >> 25) & 0x38) | ((temp >> 21) & 0x07));
 
                         if (year < 70)
                             year += 2000;
                         else
                             year += 1900;
 
-                        var valid = (_data[1] & 0x80) == 0;
-                        var summer = (_data[1] & 0x8000) == 0;
+                        var valid = (Data[1] & 0x80) == 0;
+                        var summer = (Data[1] & 0x8000) == 0;
 
                         if (month == 0 || day == 0)
                             result = DateTime.MinValue;
@@ -241,12 +242,13 @@ namespace MBus.DataRecord
 
         private string ParseString(int multiplier)
         {
-            throw new NotImplementedException();
+            return Encoding.ASCII.GetString(Data);//TODO: Add more variable length parsers
         }
 
         private double ParseBCD(int multiplier)
         {
-            return long.Parse(_data.Reverse().ToArray().ToHexString()) * Math.Pow(10, multiplier);
+            //return Convert.ToInt64(Data.Reverse().ToArray().ToHexString()) * Math.Pow(10, multiplier);
+            return long.Parse(Data.Reverse().ToArray().ToHexString()) * Math.Pow(10, multiplier);
         }
 
         private float ParseReal(int multiplier)
@@ -261,16 +263,16 @@ namespace MBus.DataRecord
 
         private long ValueAsLong()
         {
-            var length = _data.Length;
+            var length = Data.Length;
             if (length == 0)
             {
                 return 0;
             }
 
-            var correctEndian = _data;
+            var correctEndian = Data;
             switch (length)
             {
-                case 1: return _data[0];
+                case 1: return Data[0];
                 case 2: return BitConverter.ToInt16(correctEndian, 0);
                 case 3: return BitConverter.ToInt32(new byte[1].Concat(correctEndian).Reverse().ToArray(), 0);
                 case 4: return BitConverter.ToInt32(correctEndian, 0);
