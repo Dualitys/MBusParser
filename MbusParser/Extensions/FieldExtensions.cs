@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MBus.DataRecord;
+using MBus.DataRecord.DataRecordHeader.DataInformationBlock;
 using MBus.DataRecord.DataRecordHeader.ValueInformationBlock.Extension;
 
 namespace MBus.Extensions
@@ -17,6 +18,12 @@ namespace MBus.Extensions
 
         public static bool IsSameType(this FDValueInformationExtensionField field,
             FDValueInformationExtension extension)
+        {
+            return field.Type == extension;
+        }
+
+        public static bool IsSameType(this PrimaryValueInformationExtensionField field,
+            PrimaryValueInformationExtension extension)
         {
             return field.Type == extension;
         }
